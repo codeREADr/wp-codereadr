@@ -46,20 +46,19 @@ if ( false === $is_api_key_valid ) {
 }
 $api_key = get_option( 'codereadr-api-key' );
 ?>
-<div class="codereadr-admin-settings-page">
+<div class="codereadr-admin-page codereadr-admin-settings-page">
 	<h3><?php _e( 'CodeREADr Settings ', 'codereadr' ); ?></h3>
-	<div class="codereadr-admin-settings-page__content">
-		<div class="codereadr-admin-settings-page__api-key">
+	<div class="codereadr-admin-page__content codereadr-admin-settings-page__content">
+		<div class="codereadr-admin-page__header">
 			<h4><?php _e( 'API KEY ', 'codereadr' ); ?></h4>
-			<form action="#" method="post">
-				<div class="codereadr-admin-settings-page__api-key-label"><?php _e( 'Enter your api key here', 'codereadr' ); ?></div>
-				<input <?php echo $api_key ? 'disabled' : ''; ?> type="text" name="api-key" class="codereadr-admin-settings-page__api-key-input" value="<?php echo $api_key ? esc_attr( str_repeat( '*', strlen( $api_key ) - 4 ) . substr( $api_key, -4 ) ) : ''; ?>" />
-				<div class="codereadr-admin-settings-page__buttons">
-					<a class="codereadr-button-secondary">Reset settings</a>
-					<input type="submit" class="codereadr-button-primary" value="Save changes" />
-				</div>
-			</form>
-
 		</div>
+		<form action="#" method="post">
+			<div class="codereadr-admin-settings-page__api-key-label"><?php _e( 'Enter your api key here', 'codereadr' ); ?></div>
+			<input <?php echo $api_key ? 'disabled' : ''; ?> type="text" name="api-key" class="codereadr-admin-settings-page__api-key-input" value="<?php echo $api_key ? esc_attr( str_repeat( '*', strlen( $api_key ) - 4 ) . substr( $api_key, -4 ) ) : ''; ?>" />
+			<div class="codereadr-admin-settings-page__buttons">
+				<a class="codereadr-button-secondary">Reset settings</a>
+				<input type="submit" class="codereadr-button-primary" value="Save changes" />
+			</div>
+		</form>
 	</div>
 </div>
