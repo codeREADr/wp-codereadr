@@ -41,14 +41,14 @@ if ( is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) != 
 }
 ?>
 
-<div class='codereadr-admin-services-page'>
+<div class='codereadr-admin-page codereadr-admin-services-page'>
 	<h3> 
 	<?php
 	_e( 'CodeREADr Services ', 'codereadr' );
 	?>
 	</h3>
-	<div class="codereadr-admin-services-page__content">
-		<div class="codereadr-admin-services-page__header">
+	<div class="codereadr-admin-page__content codereadr-admin-services-page__content">
+		<div class="codereadr-admin-page__header">
 			<h4><?php _e( 'Installed services ', 'codereadr' ); ?></h4> 
 			<a class="codereadr-button-primary"> <?php _e( 'Add a new service', 'codereadr' ); ?></a>
 		</div>
