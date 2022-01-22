@@ -62,6 +62,7 @@ class Admin {
 	public function admin_hooks() {
 		add_action( 'admin_menu', array( $this, 'create_admin_menu_pages' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 	}
 
 
@@ -72,6 +73,22 @@ class Admin {
 	 */
 	function enqueue_admin_styles( $hook ) {
 		wp_enqueue_style( 'codereadr-admin-css', CODEREADR_PLUGIN_URL . 'includes/admin/assets/style.css', array(), '1.0' );
+	}
+
+	/**
+	 * Enqueue admin scripts
+	 *
+	 * @since 1.0.0
+	 */
+	public function enqueue_admin_scripts() {
+		wp_enqueue_script( 'codereadr-admin-js', CODEREADR_PLUGIN_URL . 'includes/admin/assets/scripts.js', array( 'jquery' ), '1.0' );
+		wp_localize_script(
+			'codereadr-admin-js',
+			'codeReadr',
+			array(
+				'adminUrl' => admin_url(),
+			)
+		);
 	}
 
 	/**
