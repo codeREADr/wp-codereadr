@@ -4,22 +4,19 @@
  * This class is forked from Woocommerce
  *
  * @since 1.0.0
- * @package QuillForms/Classes
+ * @package CodeReadr/Classes
  */
 
 /**
- * Provides logging capabilities for debugging purposes.
  *
  * @class         Logger
  * @since         1.0.0
  */
+namespace CodeReadr;
 
-
-namespace QuillForms;
-
-use QuillForms\Abstracts\Log_Levels;
-use QuillForms\Interfaces\Log_Handler_Interface;
-use QuillForms\Interfaces\Logger_Interface;
+use CodeReadr\Abstracts\Log_Levels;
+use CodeReadr\Interfaces\Log_Handler_Interface;
+use CodeReadr\Interfaces\Logger_Interface;
 
 /**
  * Logger class.
@@ -43,12 +40,12 @@ class Logger implements Logger_Interface {
 	/**
 	 * Constructor for the logger.
 	 *
-	 * @param array  $handlers Optional. Array of log handlers. If $handlers is not provided, the filter 'quillforms_register_log_handlers' will be used to define the handlers. If $handlers is provided, the filter will not be applied and the handlers will be used directly.
+	 * @param array  $handlers Optional. Array of log handlers. If $handlers is not provided, the filter 'codereadr_register_log_handlers' will be used to define the handlers. If $handlers is provided, the filter will not be applied and the handlers will be used directly.
 	 * @param string $threshold Optional. Define an explicit threshold. May be configured via LOG_THRESHOLD. By default, all logs will be processed.
 	 */
 	public function __construct( $handlers = null, $threshold = null ) {
 		if ( null === $handlers ) {
-			$handlers = apply_filters( 'quillforms_register_log_handlers', array() );
+			$handlers = apply_filters( 'codereadr_register_log_handlers', array() );
 		}
 
 		$register_handlers = array();
@@ -63,7 +60,7 @@ class Logger implements Logger_Interface {
 						__METHOD__,
 						sprintf(
 							/* translators: 1: class name 2: Log_Handler_Interface */
-							__( 'The provided handler %1$s does not implement %2$s.', 'quillforms' ),
+							__( 'The provided handler %1$s does not implement %2$s.', 'codereadr' ),
 							'<code>' . esc_html( is_object( $handler ) ? get_class( $handler ) : $handler ) . '</code>',
 							'<code>Log_Handler_Interface</code>'
 						),
@@ -113,7 +110,7 @@ class Logger implements Logger_Interface {
 	 * @return bool
 	 */
 	public function add( $handle, $message, $level = Log_Levels::NOTICE ) {
-		$message = apply_filters( 'quillforms_logger_add_message', $message, $handle );
+		$message = apply_filters( 'codereadr_logger_add_message', $message, $handle );
 		$this->log(
 			$level,
 			$message,
@@ -143,12 +140,12 @@ class Logger implements Logger_Interface {
 	public function log( $level, $message, $context = array() ) {
 		if ( ! Log_Levels::is_valid_level( $level ) ) {
 			/* translators: 1: Logger::log 2: level */
-			_doing_it_wrong( __METHOD__, sprintf( __( '%1$s was called with an invalid level "%2$s".', 'quillforms' ), '<code>Logger::log</code>', $level ), '1.0.0' );
+			_doing_it_wrong( __METHOD__, sprintf( __( '%1$s was called with an invalid level "%2$s".', 'codereadr' ), '<code>Logger::log</code>', $level ), '1.0.0' );
 		}
 
 		if ( $this->should_handle( $level ) ) {
 			$timestamp = time();
-			$message   = apply_filters( 'quillforms_logger_log_message', $message, $level, $context );
+			$message   = apply_filters( 'codereadr_logger_log_message', $message, $level, $context );
 
 			foreach ( $this->handlers as $handler ) {
 				$handler->handle( $timestamp, $level, $message, $context );
@@ -299,7 +296,7 @@ class Logger implements Logger_Interface {
 	 * @since 3.4.0
 	 */
 	public function clear_expired_logs() {
-		$days      = absint( apply_filters( 'quillforms_logger_days_to_retain_logs', 30 ) );
+		$days      = absint( apply_filters( 'codereadr_logger_days_to_retain_logs', 30 ) );
 		$timestamp = strtotime( "-{$days} days" );
 
 		foreach ( $this->handlers as $handler ) {
