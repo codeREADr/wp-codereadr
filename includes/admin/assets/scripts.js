@@ -8,5 +8,23 @@ jQuery(document).ready(function($) {
     });
     $('.codereadr-add-response-modal .codereadr-button-secondary').on('click', function(){
         $(".codereadr-add-response-modal").removeClass('show');
+    });
+
+    $('.codereadr-add-response-modal .codereadr-button-primary').on('click', function() {
+        $.ajax({
+            url: codeReadr.ajaxUrl,
+            method: "POST",
+            dataType : "json",
+            data: {
+                action: "codereadr_add_new_response",
+                name: $('.codereadr-response-name').val(),
+                txt: $(".codereadr-response-text").val(),
+                status: $(".codereadr-response-status").val(),
+                id: $(".codereadr-response-id").val()
+            },
+            success: function(data) {
+                $(".codereadr-add-response-modal").removeClass('show');
+            }
+        });
     })
 })

@@ -9,6 +9,8 @@
 
 namespace CodeReadr\Admin;
 
+use CodeReadr\Responses_Model;
+
 /**
  * CodeReadr Admin
  *
@@ -63,15 +65,43 @@ class Admin {
 		add_action( 'admin_menu', array( $this, 'create_admin_menu_pages' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+		add_action( 'wp_ajax_codereadr_add_new_response', array( $this, 'insert_or_update_response' ) );
+		add_action( 'wp_ajax_codereadr_update_new_response', array( $this, 'insert_or_update_response' ) );
 	}
 
+
+	/**
+	 * Add a new response via ajax
+	 *
+	 * @since 1.0.0
+	 */
+	public function insert_or_update_response() {
+		$text = sanitize_textarea_field( $_POST['txt'] );
+		$name = sanitize_text_field( $_POST['name'] );
+		// @todo sanaitization
+		$status      = $_POST['status'];
+		$response_id = null;
+		if ( $_POST['id'] ) {
+			$response_id = (int) $_POST['id'];
+		}
+		if ( $response_id ) {
+			$res = Responses_Model::update_response( $response_id, $name, $status, $text );
+		} else {
+			$res = Responses_Model::add_new_response( $name, $status, $text );
+		}
+		if ( $res ) {
+			wp_send_json_success( array( 'message' => 'Inserted succesfully!' ) );
+		} else {
+			wp_send_json_error( array( 'message' => 'Error while inserting a new response' ) );
+		}
+	}
 
 	/**
 	 * Enqueue admin enqueue_admin_styles
 	 *
 	 * @since 1.0.0
 	 */
-	function enqueue_admin_styles( $hook ) {
+	public function enqueue_admin_styles() {
 		wp_enqueue_style( 'codereadr-admin-css', CODEREADR_PLUGIN_URL . 'includes/admin/assets/style.css', array(), '1.0' );
 	}
 
@@ -86,7 +116,7 @@ class Admin {
 			'codereadr-admin-js',
 			'codeReadr',
 			array(
-				'adminUrl' => admin_url(),
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 			)
 		);
 	}
