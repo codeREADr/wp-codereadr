@@ -16,7 +16,7 @@ jQuery(document).ready(function($) {
             method: "POST",
             dataType : "json",
             data: {
-                action: "codereadr_add_new_response",
+                action: "insert_or_update_response",
                 name: $('.codereadr-response-name').val(),
                 txt: $(".codereadr-response-text").val(),
                 status: $(".codereadr-response-status").val(),

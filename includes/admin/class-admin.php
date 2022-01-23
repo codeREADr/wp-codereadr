@@ -65,8 +65,7 @@ class Admin {
 		add_action( 'admin_menu', array( $this, 'create_admin_menu_pages' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
-		add_action( 'wp_ajax_codereadr_add_new_response', array( $this, 'insert_or_update_response' ) );
-		add_action( 'wp_ajax_codereadr_update_new_response', array( $this, 'insert_or_update_response' ) );
+		add_action( 'wp_ajax_codereadr_insert_or_update_response', array( $this, 'insert_or_update_response' ) );
 	}
 
 
