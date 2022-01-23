@@ -31,10 +31,10 @@ class Install {
 	 * This check is done on all requests and runs if the versions do not match.
 	 */
 	public static function check_version() {
-		if ( version_compare( get_option( 'codereadr_version' ), CODEREADR_VERSION, '<' ) ) {
+		// if ( version_compare( get_option( 'codereadr_version' ), CODEREADR_VERSION, '<' ) ) {
 			self::install();
 			do_action( 'codereadr_updated' );
-		}
+		// }
 	}
 
 	/**
@@ -44,19 +44,8 @@ class Install {
 	 * @static
 	 */
 	public static function install() {
-		// Check if we are not already running this routine.
-		if ( 'yes' === get_transient( 'codereadr_installing' ) ) {
-			return;
-		}
-
-		// If we made it till here nothing is running yet, lets set the transient now.
-		set_transient( 'codereadr_installing', 'yes', MINUTE_IN_SECONDS * 10 );
-
 		self::create_tables();
 		self::update_codereadr_version();
-
-		delete_transient( 'codereadr_installing' );
-
 	}
 
 	/**
@@ -71,8 +60,8 @@ class Install {
 
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$sql = "CREATE TABLE {$wpdb->prefix}coderadr_services (
-			    ID mediumint(8) unsigned NOT NULL auto_increment,
+		$sql = "CREATE TABLE {$wpdb->prefix}codereadr_services (
+			    ID mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
 				action_id mediumint(8) unsigned NOT NULL,
 				response_id mediumint(8) unsigned NOT NULL,
 				date_created datetime NOT NULL,
@@ -86,28 +75,29 @@ class Install {
 				source varchar(200) NOT NULL,
 				message longtext NOT NULL,
 				context longtext NULL,
-				PRIMARY KEY (log_id),
+				PRIMARY KEY (ID),
 				KEY level (level)
-			) $charset_collate;";
-			"CREATE TABLE {$wpdb->prefix}coderadr_actions (
-			    ID mediumint(8) unsigned NOT NULL auto_increment,
+			) $charset_collate;
+			CREATE TABLE {$wpdb->prefix}codereadr_actions (
+			    ID mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
 				type varchar(50) NOT NULL,
 				details longtext,
 				date_created datetime NOT NULL,
 				date_updated datetime,
 				PRIMARY KEY  (ID)
-			) $charset_collate;";
+			) $charset_collate;
 
-			"CREATE TABLE {$wpdb->prefix}coderadr_responses (
-			    ID mediumint(8) unsigned NOT NULL auto_increment,
-				valid_response_body longtext,
-				invalid_response_body longtext,
+			CREATE TABLE {$wpdb->prefix}codereadr_responses (
+			    ID mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+				name varchar(255) NOT NULL,
+				status tinyint(1) NOT NULL DEFAULT '1',
+				text longtext,
 				date_created datetime NOT NULL,
 				date_updated datetime,
 				PRIMARY KEY  (ID)
 			) $charset_collate;";
 
-		dbDelta( $sql );
+		 dbDelta( $sql );
 	}
 
 	/**
