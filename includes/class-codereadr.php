@@ -81,8 +81,13 @@ final class CodeReadr {
 	 * @since 1.0.0
 	 */
 	private function load_dependencies() {
-		// functions.
+		// Functions.
 		require_once CODEREADR_PLUGIN_DIR . 'includes/functions.php';
+
+		// Models.
+		require_once CODEREADR_PLUGIN_DIR . 'includes/models/class-actions-model.php';
+		require_once CODEREADR_PLUGIN_DIR . 'includes/models/class-services-model.php';
+		require_once CODEREADR_PLUGIN_DIR . 'includes/models/class-responses-model.php';
 
 	}
 
