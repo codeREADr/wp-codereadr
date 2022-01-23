@@ -77,7 +77,7 @@ function codereadr_pre_init() {
 	}
 
 	CodeReadr::instance();
-	register_activation_hook( CODEREADR_PLUGIN_DIR, array( CODEREADR\Install::class, 'install' ) );
+	register_activation_hook( CODEREADR_PLUGIN_DIR, array( CodeReadr\Install::class, 'install' ) );
 
 	// do codereadr_loaded action.
 	add_action(
