@@ -9,7 +9,8 @@
 
 namespace CodeReadr\Admin;
 
-use CodeReadr\Responses_Model;
+use CodeReadr\Actions_Model;
+use Services_Model;
 
 /**
  * CodeReadr Admin
@@ -65,7 +66,7 @@ class Admin {
 		add_action( 'admin_menu', array( $this, 'create_admin_menu_pages' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
-		add_action( 'wp_ajax_codereadr_insert_or_update_response', array( $this, 'insert_or_update_response' ) );
+		add_action( 'wp_ajax_codereadr_insert_or_update_service', array( $this, 'insert_or_update_service' ) );
 	}
 
 
@@ -74,19 +75,19 @@ class Admin {
 	 *
 	 * @since 1.0.0
 	 */
-	public function insert_or_update_response() {
-		$text = sanitize_textarea_field( $_POST['txt'] );
-		$name = sanitize_text_field( $_POST['name'] );
-		// @todo sanaitization
-		$status      = $_POST['status'];
-		$response_id = null;
+	public function insert_or_update_service() {
+		$response_txt = sanitize_textarea_field( $_POST['response_txt'] );
+		$action_name  = sanitize_text_field( $_POST['action_name'] );
+		$title        = sanitize_text_field( $_POST['title'] );
+		$service_id   = null;
+
 		if ( $_POST['id'] ) {
-			$response_id = (int) $_POST['id'];
+			$service_id = (int) $_POST['id'];
 		}
-		if ( $response_id ) {
-			$res = Responses_Model::update_response( $response_id, $name, $status, $text );
+		if ( $service_id ) {
+			$res = Services_Model::update_service( $service_id, $title, $action_name, $response_txt );
 		} else {
-			$res = Responses_Model::add_new_response( $name, $status, $text );
+			$res = Services_Model::add_new_service( $title, $action_name, $response_txt );
 		}
 		if ( $res ) {
 			wp_send_json_success( array( 'message' => 'Inserted succesfully!' ) );
@@ -137,8 +138,6 @@ class Admin {
 		);
 		add_submenu_page( 'codereadr-settings', __( 'CodeREADr', 'codereadr' ), __( 'Settings', 'codereadr' ), 'manage_options', 'codereadr-settings', array( $this, 'render_settings_page' ) );
 		add_submenu_page( 'codereadr-settings', __( 'Services', 'codereadr' ), __( 'Services', 'codereadr' ), 'manage_options', 'codereadr-services', array( $this, 'render_services_page' ) );
-		add_submenu_page( 'codereadr-settings', __( 'Actions', 'codereadr' ), __( 'Actions', 'codereadr' ), 'manage_options', 'codereadr-actions', array( $this, 'render_actions_page' ) );
-		add_submenu_page( 'codereadr-settings', __( 'Responses', 'codereadr' ), __( 'Responses', 'codereadr' ), 'manage_options', 'codereadr-responses', array( $this, 'render_responses_page' ) );
 	}
 
 
@@ -161,28 +160,6 @@ class Admin {
 	public function render_services_page() {
 		ob_start();
 		require_once CODEREADR_PLUGIN_DIR . 'includes/admin/pages/services.php';
-		echo ob_get_clean();
-	}
-
-	/**
-	 * Render actions page
-	 *
-	 * @since 1.0.0
-	 */
-	public function render_actions_page() {
-		ob_start();
-		require_once CODEREADR_PLUGIN_DIR . 'includes/admin/pages/actions.php';
-		echo ob_get_clean();
-	}
-
-	/**
-	 * Render responses page
-	 *
-	 * @since 1.0.0
-	 */
-	public function render_responses_page() {
-		ob_start();
-		require_once CODEREADR_PLUGIN_DIR . 'includes/admin/pages/responses.php';
 		echo ob_get_clean();
 	}
 

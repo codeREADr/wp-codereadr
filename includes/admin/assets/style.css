@@ -64,17 +64,10 @@
 
 }
 
-
-/*----------------------------------------------------------------
-    Responses page
-----------------------------------------------------------------*/ 
-.codereadr-admin-responses-page__buttons {
-    display: flex;
-    justify-content: flex-end;
-}
 .codereadr-admin-responses-page__buttons .codereadr-button-secondary {
     margin: 0 20px;
 }
+
 /*----------------------------------------------------------------
     Modal
 ----------------------------------------------------------------*/ 

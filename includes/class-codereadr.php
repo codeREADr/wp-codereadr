@@ -85,10 +85,7 @@ final class CodeReadr {
 		require_once CODEREADR_PLUGIN_DIR . 'includes/functions.php';
 
 		// Models.
-		require_once CODEREADR_PLUGIN_DIR . 'includes/models/class-actions-model.php';
 		require_once CODEREADR_PLUGIN_DIR . 'includes/models/class-services-model.php';
-		require_once CODEREADR_PLUGIN_DIR . 'includes/models/class-responses-model.php';
-
 	}
 
 	/**

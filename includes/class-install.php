@@ -32,8 +32,8 @@ class Install {
 	 */
 	public static function check_version() {
 		// if ( version_compare( get_option( 'codereadr_version' ), CODEREADR_VERSION, '<' ) ) {
-			self::install();
-			do_action( 'codereadr_updated' );
+		self::install();
+		do_action( 'codereadr_updated' );
 		// }
 	}
 
@@ -62,11 +62,12 @@ class Install {
 
 		$sql = "CREATE TABLE {$wpdb->prefix}codereadr_services (
 			    ID mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-				action_id mediumint(8) unsigned NOT NULL,
-				response_id mediumint(8) unsigned NOT NULL,
+				title varchar(155),
+				action_name varchar(255) NOT NULL,
+				response_txt longtext,
 				date_created datetime NOT NULL,
 				date_updated datetime,
-				PRIMARY KEY  (ID)
+				PRIMARY KEY (ID)
 			) $charset_collate;
 			CREATE TABLE {$wpdb->prefix}codereadr_log (
 				ID BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -77,24 +78,6 @@ class Install {
 				context longtext NULL,
 				PRIMARY KEY (ID),
 				KEY level (level)
-			) $charset_collate;
-			CREATE TABLE {$wpdb->prefix}codereadr_actions (
-			    ID mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-				type varchar(50) NOT NULL,
-				details longtext,
-				date_created datetime NOT NULL,
-				date_updated datetime,
-				PRIMARY KEY  (ID)
-			) $charset_collate;
-
-			CREATE TABLE {$wpdb->prefix}codereadr_responses (
-			    ID mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-				name varchar(255) NOT NULL,
-				status tinyint(1) NOT NULL DEFAULT '1',
-				text longtext,
-				date_created datetime NOT NULL,
-				date_updated datetime,
-				PRIMARY KEY  (ID)
 			) $charset_collate;";
 
 		 dbDelta( $sql );
