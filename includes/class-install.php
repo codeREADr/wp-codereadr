@@ -31,6 +31,7 @@ class Install {
 	 * This check is done on all requests and runs if the versions do not match.
 	 */
 	public static function check_version() {
+
 		// if ( version_compare( get_option( 'codereadr_version' ), CODEREADR_VERSION, '<' ) ) {
 		self::install();
 		do_action( 'codereadr_updated' );
@@ -62,9 +63,11 @@ class Install {
 
 		$sql = "CREATE TABLE {$wpdb->prefix}codereadr_services (
 			    ID mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+				codereadr_service_id varchar(50),
 				title varchar(155),
+				integration_slug varchar(255) NOT NULL,
 				action_name varchar(255) NOT NULL,
-				response_txt longtext,
+				meta longtext,
 				date_created datetime NOT NULL,
 				date_updated datetime,
 				PRIMARY KEY (ID)

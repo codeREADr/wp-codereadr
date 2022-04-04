@@ -22,6 +22,25 @@ class Action {
 	public $name;
 
 	/**
+	 * Action description.
+	 *
+	 * @var string
+	 *
+	 * @since 1.0.0
+	 */
+	public $description;
+
+	/**
+	 * Integration slug
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	public $integration_slug;
+
+
+	/**
 	 * Action title.
 	 * The action title that will appear on admin dashboard.
 	 *
@@ -30,17 +49,6 @@ class Action {
 	 * @since 1.0.0
 	 */
 	public $title;
-
-
-	/**
-	 * Action data.
-	 * The action data that will prepered after processing.
-	 *
-	 * @var mixed
-	 *
-	 * @since 1.0.0
-	 */
-	public $action_data = null;
 
 	/**
 	 * Allowable merge tags.
@@ -52,6 +60,23 @@ class Action {
 	 */
 	public $allowable_merge_tags = array();
 
+	/**
+	 * Default invalid conditions.
+	 *
+	 * @var array
+	 *
+	 * @since 1.0.0
+	 */
+	public $default_invalid_conditions = array();
+
+	/**
+	 * Optional Invalide conditions.
+	 *
+	 * @var array
+	 *
+	 * @since 1.0.0
+	 */
+	public $optional_invalid_conditions = array();
 
 	/**
 	 * Process action.
@@ -59,21 +84,19 @@ class Action {
 	 *
 	 * @since 1.0.0
 	 */
-	public function process_action() {
+	public function process_action( $scan_data, $response_text ) {
 
 	}
 
-
 	/**
-	 * Handle response
-	 * The method should return the response needed to be shown to the user and it is expected to parse the allowablecustom merge tags for this action.
+	 * Parse CodeReadr merge tags
 	 *
 	 * @since 1.0.0
 	 */
-	public function handle_response() {
-		// we should be able here to access  $this->action_data.
-		return null;
+	public function parse_codereadr_merge_tags( $scan_data, $response_text ) {
+		$response_text = str_replace( '{tid}', $scan_data['tid'], $response_text );
+		$response_text = str_replace( '{sid}', $scan_data['sid'], $response_text );
+		return $response_text;
 	}
-
 
 }

@@ -20,7 +20,7 @@
 }
 
 .codereadr-admin-services-page__content {
-    max-width: 600px;
+    max-width: 900px;
 }
 
 .codereadr-admin-page__header {
@@ -59,15 +59,86 @@
     margin-bottom: 0;
 }
 .codereadr-admin-services-page__content table td {
-    padding: 10px 5px;
+    padding: 20px 5px;
      border-bottom: 1px solid #eee
 
 }
 
+
 .codereadr-admin-responses-page__buttons .codereadr-button-secondary {
     margin: 0 20px;
 }
+.codereadr-service-action__optional-invalid-condition-response {
+    display: none;
+}
+.codereadr-service-action__optional-invalid-condition-response.show {
+    display: block;
+}
+.codereadr-modal textarea {
+    width: 100%;
+}
+.codereadr-success-response-area{
+    padding: 10px;
+    background: #55ca7f;
+    border-radius: 5px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+.codereadr-success-response-area textarea {
+    background: #e4fff3;
+    border-color: #e4fff3 !important;
+}
+.codereadr-service-action__default-invalid-conditions,
+.codereadr-service-action__optional-invalid-conditions {
+    padding: 10px;
+    background: #f1536d;
+    border-radius: 5px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+.codereadr-service-action__default-invalid-conditions textarea, 
+.codereadr-service-action__optional-invalid-conditions textarea {
+    background: #edbdc7;
+    border-color: #edbdc7;
+}
+.codereadr-service-action__default-invalid-conditions:empty,
+.codereadr-service-action__optional-invalid-conditions:empty {
+    display: none;
+}
 
+/*----------------------------------------------------------------
+    Integrations page 
+-----------------------------------------------------------------*/
+.codereadr-admin-integrations-page__content {
+    display: flex;
+    justify-content: space-evenly
+    
+}
+.codereadr-admin-integrations-page__content {
+    max-width: 800px;
+    margin-top: 30px;
+}
+.codereadr-admin-integrations-page__content > div {
+    padding: 20px;
+    background: #fff;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+.codereadr-admin-integrations-page__content > div img {
+    width: 80px;
+}
+.codereadr-integration h4 {
+    text-align: center;
+}
+
+.codereadr-event-custom-integration {
+    cursor: pointer;
+}
 /*----------------------------------------------------------------
     Modal
 ----------------------------------------------------------------*/ 
@@ -95,6 +166,7 @@
 .codereadr-modal__content {
     min-width: 500px;
     max-width: 500px;
+    min-height: 400px;
     max-height: 600px;
     overflow-y: auto;
     margin: auto;
@@ -105,6 +177,139 @@
 .codereadr-modal__header {
     border-bottom: 1px solid #eee;
     margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+
+.codereadr-users-form-screen, .codereadr-users-listing-screen, 
+.codereadr-listing-screen__loader, .codereadr-users-listing-screen__users  {
+    display: none;
+}
+
+.codereadr-users-form-screen.show, .codereadr-users-listing-screen.show,
+.codereadr-listing-screen__loader.show, .codereadr-users-listing-screen__users.show {
+    display: block;
+    height: 100%;
+    width: 100%;
+    padding-bottom: 40px;
+}
+
+.codereadr-listing-screen__loader.show {
+   margin-top: 100px;
+   text-align: center;  
+}
+.codereadr-modal__close {
+    cursor: pointer;
+}
+.codereadr-users-listing-screen__users-list {
+    margin-bottom: 30px;
+}
+.codereadr-back-to-users-listing-screen {
+    cursor: pointer;
+}
+.codereadr-users-listing-screen__users-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+.codereadr-users-listing-screen__users-list p {
+    flex: 1 1 50%;
+}
+.codereadr-service-action-description {
+    margin-top: 20px;
+}
+/*----------------------------------------------------------------
+    Loader
+----------------------------------------------------------------*/ 
+
+@-webkit-keyframes dyinglight {
+  15% {
+    transform: scale(1.6);
+  }
+  50% {
+    transform: rotate(-89deg);
+  }
+  100% {
+    transform: rotate(-90deg);
+  }
+}
+
+@keyframes dyinglight {
+  15% {
+    transform: scale(1.6);
+  }
+  50% {
+    transform: rotate(-89deg);
+  }
+  100% {
+    transform: rotate(-90deg);
+  }
+}
+.dl {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+}
+
+.dl__square {
+  display: block;
+  width: 50px;
+  height: 50px;
+  background: #4285F4;
+}
+
+.dl__container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  transform-origin: 50% 50% 0;
+  -webkit-animation: dyinglight 1s ease infinite;
+          animation: dyinglight 1s ease infinite;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+}
+
+.dl__corner--top:before,
+.dl__corner--top:after,
+.dl__corner--bottom:before,
+.dl__corner--bottom:after {
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  color: #4285F4;
+  content: "";
+}
+
+.dl__corner--top:before {
+  border-left: 1px solid;
+  border-top: 1px solid;
+  top: -6px;
+  left: -6px;
+}
+.dl__corner--top:after {
+  border-right: 1px solid;
+  border-top: 1px solid;
+  top: -6px;
+  right: -6px;
+}
+
+.dl__corner--bottom:before {
+  border-left: 1px solid;
+  border-bottom: 1px solid;
+  bottom: -6px;
+  left: -6px;
+}
+.dl__corner--bottom:after {
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+  bottom: -6px;
+  right: -6px;
 }
 
 /*----------------------------------------------------------------
@@ -113,19 +318,47 @@
 .codereadr-admin-settings-page__buttons {
     margin-top: 30px;
 }
+.codereadr-admin-services-page__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+.codereadr-admin-services-page__buttons .codereadr-button-primary {
+    margin-left: 10px;
+}
 .codereadr-admin-settings-page__buttons .codereadr-button-secondary {
     margin-right: 20px;
 }
-.codereadr-button-primary, .codereadr-button-secondary {
+.codereadr-button-primary, .codereadr-button-secondary, .codereadr-button-warning, .codereadr-button-danger, .codereadr-button-info {
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
     border: none;
     box-shadow: none;
 }
+
+.codereadr-button-warning, .codereadr-button-danger, .codereadr-button-primary,
+.codereadr-button-warning:hover, .codereadr-button-danger:hover, .codereadr-button-primary:hover, 
+.codereadr-button-info, .codereadr-button-info:hover  {
+    color: #fff;
+}
 .codereadr-button-primary {
-    background: #4946E5;
-    color: #fff !important;
+    background: #3c38ee
+}
+.codereadr-button-info {
+    background: #ecbe18;
+}
+.codereadr-button-danger {
+    background: #e54242;
+}
+.codereadr-button-danger:hover {
+    background: #e22929;
+}
+.codereadr-button-warning {
+    background: rgb(255, 115, 0);
+}
+.codereadr-button-warning:hover {
+    background: rgb(187, 85, 1);
 }
 .codereadr-button-primary:hover {
     background: #3c38ee
@@ -141,6 +374,14 @@
 /*----------------------------------------------------------------
     Messages and alerts
 ----------------------------------------------------------------*/ 
+.codereadr-info-message {
+    background: #D5D4F8;
+    color: #3733FF;
+    display: inline-block;
+    padding: 5px 20px;
+    border-radius: 10px;
+
+}
 .codereadr-error-message {
     background: #e54242;
     color: #fff;
@@ -153,10 +394,10 @@
 }
 .codereadr-success-message {
     background: #14844e;
-   color: #fff;
-   display: inline-block;
-   padding: 5px 20px;
-   border-radius: 10px
+    color: #fff;
+    display: inline-block;
+    padding: 5px 20px;
+    border-radius: 10px
 }
 .codereadr-not-found-message {
     color: #c58808;

@@ -43,8 +43,7 @@ final class Actions_Manager {
 	 *
 	 * @return Action the registered action on success, or false on failure
 	 */
-	public function register( Action $block ) {
-		$action      = $block;
+	public function register( Action $action ) {
 		$action_name = $action->name;
 
 		if ( preg_match( '/[A-Z]+/', $action_name ) ) {
@@ -141,7 +140,7 @@ final class Actions_Manager {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return Blocks_Manager the main instance
+	 * @return Actions_Manager the main instance
 	 */
 	public static function instance() {
 		if ( null === self::$instance ) {

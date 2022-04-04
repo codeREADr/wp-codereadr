@@ -42,6 +42,7 @@ class Log_Handler_DB extends Log_Handler {
 	 * @return bool False if value was not handled and true if value was handled.
 	 */
 	public function handle( $timestamp, $level, $message, $context ) {
+
 		// source.
 		if ( ! empty( $context['source'] ) ) {
 			$source = $context['source'];
@@ -92,7 +93,6 @@ class Log_Handler_DB extends Log_Handler {
 		if ( ! empty( $context ) ) {
 			$insert['context'] = serialize( $context ); // @codingStandardsIgnoreLine.
 		}
-
 		return false !== $wpdb->insert( "{$wpdb->prefix}codereadr_log", $insert, $format );
 	}
 
