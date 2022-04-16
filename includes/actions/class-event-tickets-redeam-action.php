@@ -58,7 +58,7 @@ class WC_Event_Tickets_Redeam_Action extends Event_Tickets_Search_Action {
 			10,
 			2
 		);
-		parent::process_action( $scan_data, $meta );
+		return parent::process_action( $scan_data, $meta );
 	}
 }
 
