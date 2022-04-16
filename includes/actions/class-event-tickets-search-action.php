@@ -123,9 +123,35 @@ class Event_Tickets_Search_Action extends Action {
 
 	/**
 	 * Process action.
-	 * After processing any action we should set action data with a new value to be able to access it via handle_response method.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param array $scan_data The scan data retrieved from CodeReadr.
+	 *    $scan_data = [
+	 *      'tid'     => (string) Scanned Ticked Id.
+	 *      'sid' => (string) Service Id.
+	 *    ].
+	 * @param array $meta The action meta
+	 *    $meta = [
+	 *      'default_invalid_conditions'     => [
+	 *          'ticket_not_found' => [
+	 *              'response_text' => (string) The response text.
+	 *          ] // This is just an example.
+	 *      ]
+	 *      'optional_invalid_conditions' => [
+	 *          'ticket_already_redeamed' => [
+	 *              'checkbox' => (bool) Is option checked or not.
+	 *              'response_text' => (string) The response text.
+	 *          ] // This is just an example.
+	 *      ],
+	 *      'success_response_txt' => (string) The success response text.
+	 *    ].
+	 *
+	 * @return array $response The response
+	 *    $response = [
+	 *        'status' => (int) 0 for invalid response or 1 for valid
+	 *        'text' => (string) The response text.
+	 *    ]
 	 */
 	public function process_action( $scan_data, $meta ) {
 		global $wpdb;

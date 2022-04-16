@@ -48,6 +48,33 @@ class WC_Event_Tickets_Redeam_Action extends Event_Tickets_Search_Action {
 	 * Process action.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param array $scan_data The scan data retrieved from CodeReadr.
+	 *    $scan_data = [
+	 *      'tid'     => (string) Scanned Ticked Id.
+	 *      'sid' => (string) Service Id.
+	 *    ].
+	 * @param array $meta The action meta
+	 *    $meta = [
+	 *      'default_invalid_conditions'     => [
+	 *          'ticket_not_found' => [
+	 *              'response_text' => (string) The response text.
+	 *          ] // This is just an example.
+	 *      ]
+	 *      'optional_invalid_conditions' => [
+	 *          'ticket_already_redeamed' => [
+	 *              'checkbox' => (bool) Is option checked or not.
+	 *              'response_text' => (string) The response text.
+	 *          ] // This is just an example.
+	 *      ],
+	 *      'success_response_txt' => (string) The success response text.
+	 *    ].
+	 *
+	 * @return array $response The response
+	 *    $response = [
+	 *        'status' => (int) 0 for invalid response or 1 for valid
+	 *        'text' => (string) The response text.
+	 *    ]
 	 */
 	public function process_action( $scan_data, $meta ) {
 		add_action(
@@ -58,6 +85,11 @@ class WC_Event_Tickets_Redeam_Action extends Event_Tickets_Search_Action {
 			10,
 			2
 		);
+		return $this->parent_process_action( $scan_data, $meta );
+	}
+
+
+	public function parent_process_action( $scan_data, $meta ) {
 		return parent::process_action( $scan_data, $meta );
 	}
 }
