@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-	$('.codereadr-event-custom-integration').on('click', function() {
+	$('.codreadr-custom-integration__view').on('click', function() {
 		$('.codereadr-modal').addClass('show');
 	});
 
@@ -93,11 +93,20 @@ jQuery(document).ready(function($) {
                 data: {
                     action: 'codereadr_delete_service',
                     'codereadr-service-remote-id': codereadr_service_id,
-                    'service-database-unique-id': serviceId,
+                    'service-database-unique-id': service.ID,
 					nonce: codeReadr.nonce
                 },
                 success: function (data) {
-                    location.reload();
+					if(data.success) {
+                   	 location.reload();
+					}
+					else {
+						$(".codereadr-floating-error-message").empty();
+						$(".codereadr-floating-error-message").removeClass("hidden").append(data.data.message);
+						setTimeout(function() {
+							$(".codereadr-floating-error-message").addClass("hidden")
+						}, 4000);
+					}
                 },
             });
         }
@@ -142,8 +151,13 @@ jQuery(document).ready(function($) {
 	// Filling the appropriate merge tags depending on the current selected action.
 	function fillActionTypeFields(actionTypeData) {
 		if(!actionTypeData) return;
-		console.log(actionTypeData);
-		$(".codereadr-service-action-description").text(actionTypeData.description);
+		$(".codereadr-service-action-description").html("<p><strong>" + actionTypeData.title + ":</strong></p><p> " + actionTypeData.description + "</p>");
+		if(actionTypeData.hint) {
+			$(".codereadr-service-action-hint").addClass("codereadr-info-message").html(actionTypeData.hint);
+		}
+		else {
+			$(".codereadr-service-action-hint").removeClass("codereadr-info-message").empty();
+		}
 		var allowableMergeTags = actionTypeData.allowable_merge_tags;
 		$('.codereadr-service-action__custom-merge-tags').empty();
 		if (Object.keys(allowableMergeTags).length) {
@@ -166,9 +180,8 @@ jQuery(document).ready(function($) {
 		var actionTypeData = getActionType();
 		$('.codereadr-service-action__optional-invalid-conditions').empty();
 		if (Object.keys(optionalInvalidConditions).length) {
-			$('.codereadr-service-action__optional-invalid-conditions').append(
-				'<h3 style="color: #fff">Optional Invalid Conditions </h3>'
-			);
+			var str  =  '<h3 style="font-size: 16px">Optional Invalid Conditions </h3> <div class="codereadr-service-action__optional-invalid-conditions__card">'
+
 			Object.keys(optionalInvalidConditions).forEach(function (
 				invalidConditionkey
 			) {
@@ -184,10 +197,7 @@ jQuery(document).ready(function($) {
 					actionTypeData['optional_invalid_conditions'][
 						invalidConditionkey
 					].title;
-				$(
-					'.codereadr-service-action__optional-invalid-conditions'
-				).append(
-					"<div class='codereadr-service-action__optional-invalid-condition'><h4><input " +
+				str += "<div class='codereadr-service-action__optional-invalid-condition'><h4><input " +
 						checked +
 						" name='optional_invalid_conditions[" +
 						invalidConditionkey +
@@ -205,16 +215,18 @@ jQuery(document).ready(function($) {
 						(invalidCondition.response_text
 							? invalidCondition.response_text
 							: invalidCondition.default_response_text) +
-						'</textarea> </div></div>'
-				);
+						'</textarea> </div> </div>'
+				
 			});
+			str += "</div>"
+			$(
+				'.codereadr-service-action__optional-invalid-conditions'
+			).append(str);
 		}
 
 		$('.codereadr-service-action__default-invalid-conditions').empty();
 		if (Object.keys(defaultInvalidConditions).length) {
-			$('.codereadr-service-action__default-invalid-conditions').append(
-				'<h3 style="color: #fff"> Default Invalid Conditions </h3>'
-			);
+			var str2 =  '<h3 style="font-size: 16px"> Default Invalid Conditions </h3><div class="codereadr-service-action__default-invalid-conditions__card">';
 			Object.keys(defaultInvalidConditions).forEach(function (
 				invalidConditionkey
 			) {
@@ -224,10 +236,7 @@ jQuery(document).ready(function($) {
 					actionTypeData['default_invalid_conditions'][
 						invalidConditionkey
 					].title;
-				$(
-					'.codereadr-service-action__default-invalid-conditions'
-				).append(
-					"<div class='codereadr-service-action__default-invalid-condition'><h4>" +
+				str2 += "<div class='codereadr-service-action__default-invalid-condition'><h4>" +
 						title +
 						"</h4><div class='codereadr-service-action__default-condition-response'><p>Response Text</p> <textarea class='codereadr-service-action__default-invalid-condition-response-textarea' name='default_invalid_conditions[" +
 						invalidConditionkey +
@@ -235,9 +244,12 @@ jQuery(document).ready(function($) {
 						(invalidCondition.response_text
 							? invalidCondition.response_text
 							: invalidCondition.default_response_text) +
-						'</textarea> </div></div>'
-				);
+						'</textarea> </div></div>';
+					
 			});
+			str2 += "</div>";
+			$('.codereadr-service-action__default-invalid-conditions').append(str2);
+
 		}
 	}
 
@@ -342,10 +354,23 @@ jQuery(document).ready(function($) {
 			},
 			success: function (data) {
 				thisEl.removeClass('is-saving');
-				$('.codereadr-service-modal').removeClass('show');
-				location.reload();
+				thisEl.text("Save")
+
+				if(data.success) {
+					$('.codereadr-service-modal').removeClass('show');
+					location.reload();
+				}
+				else {
+					$(".codereadr-floating-error-message").empty();
+					$(".codereadr-floating-error-message").removeClass("hidden").append(data.data.message);
+					setTimeout(function() {
+						$(".codereadr-floating-error-message").addClass("hidden")
+					}, 4000);
+				}
+				
 			},
 			error: function () {
+				console.log("ldf");
 				thisEl.removeClass('is-saving');
 			},
 		});
@@ -357,7 +382,6 @@ jQuery(document).ready(function($) {
 		var integrationSlug = $(".codereadr-service-integration-select").val();
 		$(".codereadr-service-action-select option").each(function () {
 			var actionName= $(this).data('action-name');
-			console.log(actionName);
 			var actionTypeData = registeredActions[actionName];
 			if(actionTypeData['integration_slug'] !== integrationSlug) {
 				$(this).hide()
@@ -383,6 +407,8 @@ jQuery(document).ready(function($) {
 	// On click on manage users button
 	$(".codereadr-admin-services-users__manage").on('click', function() {
 		var serviceId = $(this).data('service-id');
+		var service = codereadrInDBservices.find(service => parseInt(service.codereadr_service_id) === parseInt(serviceId) );
+		$(".codereadr-manage-users-modal .codereadr-modal__headings h3 span").text(service.title);
 		$(".codereadr-back-to-users-listing-screen").attr('data-service-id', serviceId);
 	});
 	
@@ -431,13 +457,20 @@ jQuery(document).ready(function($) {
 	})
 
 
+	$(".codereadr-users-selection__all").on("click", function() {
+		$(".codereadr-users-listing-screen__users-list").find("input").prop("checked", true);
+	})
+	$(".codereadr-users-selection__none").on("click", function() {
+		$(".codereadr-users-listing-screen__users-list").find("input").prop("checked", false);
+	})
 
 
 
 	// On click on creating a new user button
-	$(".codereadr-create-new-user-button").on('click', function() {
+	$(".codereadr-create-new-user-button:not(.is-saving)").on('click', function() {
 		var serviceId = $('.codereadr-back-to-users-listing-screen').data('service-id');
-
+		var thisEl = $(this);
+		thisEl.addClass('is-saving').text("Saving");
 		$.ajax({
 			url: codeReadr.ajaxUrl,
 			method: 'POST',
@@ -450,7 +483,24 @@ jQuery(document).ready(function($) {
 				nonce: codeReadr.nonce
 			},
 			success: function (response) {
-				$(".codereadr-back-to-users-listing-screen").trigger("click")
+				if(response.success) {
+					$(".codereadr-back-to-users-listing-screen").trigger("click");
+					$(".codereadr-floating-success-message").empty();
+					$(".codereadr-floating-success-message").removeClass("hidden").append(response.data.message);
+					thisEl.text('Save Changes')
+					setTimeout(function() {
+						$(".codereadr-floating-success-message").addClass("hidden")
+					}, 4000);
+
+				}
+				else {
+					$(".codereadr-floating-error-message").empty();
+					$(".codereadr-floating-error-message").removeClass("hidden").append(response.data.message);
+					thisEl.text('Save Changes')
+					setTimeout(function() {
+						$(".codereadr-floating-error-message").addClass("hidden")
+					}, 4000);
+				}
 			},
 			error: function () {
 				
@@ -459,9 +509,11 @@ jQuery(document).ready(function($) {
 	})
 
 	// On clicking on saving users list
-	$(".codereadr-users-list-save-button").on('click', function() {
+	$(".codereadr-users-list-save-button:not(is-saving)").on('click', function() {
 		var serviceId = $('.codereadr-back-to-users-listing-screen').data('service-id');
-	
+		var thisEl = $(this)
+		thisEl.text("Saving");
+		thisEl.addClass("is-saving")
 		$.ajax({
 			url: codeReadr.ajaxUrl,
 			method: 'POST',
@@ -473,7 +525,20 @@ jQuery(document).ready(function($) {
 				nonce: codeReadr.nonce
 			},
 			success: function (response) {
-				$(".codereadr-back-to-users-listing-screen").trigger("click")
+				if(response.success) {
+					$(".codereadr-floating-success-message").empty();
+					$(".codereadr-floating-success-message").removeClass("hidden").append('Saved successfully!');
+					thisEl.removeClass("is-saving");
+					thisEl.text("Save Changes");
+	
+					setTimeout(function() {
+						$(".codereadr-floating-success-message").addClass("hidden");
+
+					}, 3000);
+				}
+				else {
+
+				}
 			},
 			error: function () {
 				

@@ -45,9 +45,11 @@ class WC_Event_Tickets_Redeam_Action extends Event_Tickets_Search_Action {
 
 
 	/**
-	 * Constructor
+	 * Process action.
+	 *
+	 * @since 1.0.0
 	 */
-	public function __construct() {
+	public function process_action( $scan_data, $meta ) {
 		add_action(
 			'codereadr_before_success_response_for_search_action_for_event_tickets_plugin',
 			function( $provider, $attendee_id ) {
@@ -56,6 +58,7 @@ class WC_Event_Tickets_Redeam_Action extends Event_Tickets_Search_Action {
 			10,
 			2
 		);
+		parent::process_action( $scan_data, $meta );
 	}
 }
 

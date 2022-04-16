@@ -103,10 +103,11 @@ final class CodeReadr {
 		require_once CODEREADR_PLUGIN_DIR . 'includes/models/class-services-model.php';
 
 		// Actions.
-		require_once CODEREADR_PLUGIN_DIR . 'includes/actions/class-wc-event-box-search-action.php';
-		require_once CODEREADR_PLUGIN_DIR . 'includes/actions/class-wc-event-box-redeam-action.php';
+		require_once CODEREADR_PLUGIN_DIR . 'includes/actions/class-wc-box-office-search-action.php';
+		require_once CODEREADR_PLUGIN_DIR . 'includes/actions/class-wc-box-office-redeam-action.php';
 		require_once CODEREADR_PLUGIN_DIR . 'includes/actions/class-event-tickets-search-action.php';
 		require_once CODEREADR_PLUGIN_DIR . 'includes/actions/class-event-tickets-redeam-action.php';
+		require_once CODEREADR_PLUGIN_DIR . 'includes/actions/class-custom-action.php';
 
 		require_once CODEREADR_PLUGIN_DIR . 'includes/class-postback-listener.php';
 	}

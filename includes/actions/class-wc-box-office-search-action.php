@@ -13,7 +13,7 @@ use CodeReadr\Managers\Actions_Manager;
  *
  * @since 1.0.0
  */
-class WC_Event_Box_Search_Action extends Action {
+class WC_Box_Office_Search_Action extends Action {
 
 	/**
 	 * Action name.
@@ -23,7 +23,7 @@ class WC_Event_Box_Search_Action extends Action {
 	 *
 	 * @since 1.0.0
 	 */
-	public $name = 'wc-event-box-search-action';
+	public $name = 'wc-box-office-search-action';
 
 	/**
 	 * Integration slug
@@ -32,7 +32,7 @@ class WC_Event_Box_Search_Action extends Action {
 	 *
 	 * @var string
 	 */
-	public $integration_slug = 'wc-event-box';
+	public $integration_slug = 'wc-box-office';
 
 	/**
 	 * Action description.
@@ -43,6 +43,14 @@ class WC_Event_Box_Search_Action extends Action {
 	 */
 	public $description = "This action will just search the ticket for the attendee but it won't redeam it.";
 
+	/**
+	 * Action hint
+	 *
+	 * @var string
+	 *
+	 * @since 1.0.0
+	 */
+	public $hint = 'This action requires <a target="_blank" href="https://woocommerce.com/products/woocommerce-order-barcodes/"> Woocommerce Order Barcodes</a> plugin to be installed.';
 
 
 	/**
@@ -53,7 +61,7 @@ class WC_Event_Box_Search_Action extends Action {
 	 *
 	 * @since 1.0.0
 	 */
-	public $title = 'Search Tickets';
+	public $title = 'Search Ticket';
 
 
 	/**
@@ -130,27 +138,34 @@ class WC_Event_Box_Search_Action extends Action {
 	 * @since 1.0.0
 	 */
 	public function process_action( $scan_data, $meta ) {
+
 		global $wpdb;
-		codereadr_get_logger()->debug( 'processing action', $meta );
-		$ticket_id = $scan_data['tid'];
-		$sql       = "select * from {$wpdb->prefix}postmeta where meta_key='_barcode_text' and meta_value='" . $ticket_id . "'";
+		if ( ! is_plugin_active( 'woocommerce-order-barcodes/woocommerce-order-barcodes.php' ) ) {
+			return array(
+				'status' => 0,
+				'text'   => 'Woocommerce Order Barcodes plugin is not installed!',
+			);
+		}
+		// codereadr_get_logger()->debug( 'processing action', $meta );
+		$scanned_ticket_id = esc_attr( $scan_data['tid'] );
 
-		$meta_row = $wpdb->get_row( $sql, ARRAY_A );
+		$ticket_id = absint( $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s", '_barcode_text', $scanned_ticket_id ) ) );
 
-		if ( ! $meta_row ) {
+		if ( ! $ticket_id ) {
 			return array(
 				'status' => 0,
 				'text'   => $meta['default_invalid_conditions']['ticket_not_found']['response_text'],
 			);
 		}
+
 		$optional_invalid_conditions = $meta['optional_invalid_conditions'];
 		if ( $optional_invalid_conditions['ticket_already_redeamed'] && $optional_invalid_conditions['ticket_already_redeamed']['checkbox'] ) {
-			$is_attended = get_post_meta( $meta_row['post_id'], '_attended', true );
+			$is_attended = get_post_meta( $ticket_id, '_attended', true );
 			if ( $is_attended ) {
 				return array(
 					'status' => 0,
 					'text'   => $this->parse_custom_merge_tags(
-						$meta_row['post_id'],
+						$ticket_id,
 						$scan_data,
 						$meta['optional_invalid_conditions']['ticket_already_redeamed']['response_text']
 					),
@@ -158,25 +173,21 @@ class WC_Event_Box_Search_Action extends Action {
 			}
 		}
 		if ( $optional_invalid_conditions['ticket_order_not_completed'] && $optional_invalid_conditions['ticket_order_not_completed']['checkbox'] ) {
-			$order_id          = wp_get_post_parent_id( $meta_row['post_id'] );
-			$order_status_name = 'N/A';
-			$order_status      = get_post_status( $order_id );
-			if ( $order_id ) {
-					$order_status_name = wc_get_order_status_name( $order_status );
-			}
-			if ( 'completed' !== $order_status_name ) {
+			$order_id     = wp_get_post_parent_id( $ticket_id );
+			$order_status = get_post_status( $order_id );
+			if ( 'wc-completed' !== $order_status ) {
 				return array(
 					'status' => 0,
 					'text'   => $this->parse_custom_merge_tags(
-						$meta_row['post_id'],
+						$ticket_id,
 						$scan_data,
 						$meta['optional_invalid_conditions']['ticket_order_not_completed']['response_text']
 					),
 				);
 			}
 		}
-		do_action( 'codereadr_before_success_response_for_search_action_for_wc_event_box', $meta_row['post_id'] );
-		$response_text = $this->parse_custom_merge_tags( $meta_row['post_id'], $scan_data, $meta['success_response_txt'] );
+		do_action( 'codereadr_before_success_response_for_search_action_for_wc_event_box', $ticket_id );
+		$response_text = $this->parse_custom_merge_tags( $ticket_id, $scan_data, $meta['success_response_txt'] );
 		return array(
 			'status' => 1,
 			'text'   => $response_text,
@@ -239,6 +250,6 @@ class WC_Event_Box_Search_Action extends Action {
 	}
 }
 
-if ( is_plugin_active( 'woocommerce-box-office/woocommerce-box-office.php' ) && is_plugin_active( 'woocommerce-order-barcodes/woocommerce-order-barcodes.php' ) ) {
-	Actions_Manager::instance()->register( new WC_Event_Box_Search_Action() );
+if ( is_plugin_active( 'woocommerce-box-office/woocommerce-box-office.php' ) ) {
+	Actions_Manager::instance()->register( new WC_Box_Office_Search_Action() );
 }

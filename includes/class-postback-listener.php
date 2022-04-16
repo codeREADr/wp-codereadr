@@ -72,7 +72,7 @@ class Postback_Listener {
 			$scan_data[ $key ] = sanitize_text_field( $value );
 		}
 
-		codereadr_get_logger()->debug( 'received the postback', $scan_data );
+		// codereadr_get_logger()->debug( 'received the postback', $scan_data );
 		$service_row = Services_Model::get_service_by_codereadr_service_id( $scan_data['sid'] );
 		if ( ! $service_row ) {
 			$response = array(
@@ -87,8 +87,8 @@ class Postback_Listener {
 		$response_xml = '<?xml version="1.0" encoding="UTF-8"?>
 			<xml>
 				<message>
-					<status>' . $response['status'] . '</status>
-					<text>' . $response['text'] . '</text>
+					<status>' . esc_attr( $response['status'] ) . '</status>
+					<text>' . esc_textarea( $response['text'] ) . '</text>
 				</message>
 			</xml>';
 

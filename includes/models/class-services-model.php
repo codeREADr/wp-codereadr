@@ -20,15 +20,14 @@ class Services_Model {
 	 */
 	public static function get_services() {
 		global $wpdb;
-		$sql           = "select * from {$wpdb->prefix}codereadr_services";
-		$results       = $wpdb->get_results( $sql, 'ARRAY_A' );
+		$results       = $wpdb->get_results( "select * from {$wpdb->prefix}codereadr_services", 'ARRAY_A' );
 		$final_results = array();
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {
 				$final_results[] = array(
-					'ID'                   => $result['ID'],
+					'ID'                   => (int) $result['ID'],
 					'action_name'          => $result['action_name'],
-					'codereadr_service_id' => $result['codereadr_service_id'],
+					'codereadr_service_id' => (int) $result['codereadr_service_id'],
 					'title'                => $result['title'],
 					'integration_slug'     => $result['integration_slug'],
 					'meta'                 => unserialize( $result['meta'] ),

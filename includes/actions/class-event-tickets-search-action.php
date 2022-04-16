@@ -129,7 +129,7 @@ class Event_Tickets_Search_Action extends Action {
 	 */
 	public function process_action( $scan_data, $meta ) {
 		global $wpdb;
-		codereadr_get_logger()->debug( 'processing event tickets search action', $meta );
+		// codereadr_get_logger()->debug( 'processing event tickets search action', $meta );
 		$ticket_id = $scan_data['tid'];
 		$sql       = "select * from {$wpdb->prefix}postmeta where meta_value='" . $ticket_id . "'";
 
@@ -205,27 +205,7 @@ class Event_Tickets_Search_Action extends Action {
 				'text'   => 'Tribe Tickets Plus last version isn\'t installed',
 			);
 		}
-		// $optional_invalid_conditions = $meta['optional_invalid_conditions'];
-		// if ( $optional_invalid_conditions['ticket_already_redeamed'] && $optional_invalid_conditions['ticket_already_redeamed']['checkbox'] ) {
-		// $is_attended = get_post_meta( $meta_row['post_id'], '_attended', true );
-		// if ( $is_attended ) {
-		// return array(
-		// 'status' => 0,
-		// 'text'   => $this->parse_custom_merge_tags(
-		// $meta_row['post_id'],
-		// $scan_data,
-		// $meta['optional_invalid_conditions']['ticket_already_redeamed']['response_text']
-		// ),
-		// );
-		// }
-		// }
 
-		// do_action( 'codereadr_before_success_response_for_search_action_for_event_tickets_plugin', $meta_row['post_id'] );
-		// $response_text = $this->parse_custom_merge_tags( $meta_row['post_id'], $scan_data, $meta['success_response_txt'] );
-		// return array(
-		// 'status' => 1,
-		// 'text'   => $response_text,
-		// );
 	}
 
 

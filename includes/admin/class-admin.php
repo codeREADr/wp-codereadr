@@ -84,13 +84,30 @@ class Admin {
 			// This nonce is not valid.
 			die( __( 'Security check', 'codereadr' ) );
 		}
-		$action_name                 = sanitize_text_field( $_POST['formData']['codereadr-service-action-select'] );
-		$title                       = sanitize_text_field( $_POST['formData']['codereadr-service-name'] );
-		$integration_slug            = sanitize_text_field( $_POST['formData']['codereadr-service-integration-slug'] );
-		$codereadr_service_id        = (int) $_POST['formData']['codereadr-service-remote-id'];
-		$service_id                  = (int) $_POST['formData']['service-database-unique-id'];
-		$default_invalid_conditions  = $_POST['formData']['default_invalid_conditions'];
-		$optional_invalid_conditions = $_POST['formData']['optional_invalid_conditions'];
+		$action_name                             = sanitize_text_field( $_POST['formData']['codereadr-service-action-select'] );
+		$title                                   = sanitize_text_field( $_POST['formData']['codereadr-service-name'] );
+		$integration_slug                        = sanitize_text_field( $_POST['formData']['codereadr-service-integration-slug'] );
+		$codereadr_service_id                    = (int) $_POST['formData']['codereadr-service-remote-id'];
+		$service_id                              = (int) $_POST['formData']['service-database-unique-id'];
+		$unsanitized_default_invalid_conditions  = $_POST['formData']['default_invalid_conditions'];
+		$unsanitized_optional_invalid_conditions = $_POST['formData']['optional_invalid_conditions'];
+
+		$default_invalid_conditions  = array();
+		$optional_invalid_conditions = array();
+
+		foreach ( $unsanitized_optional_invalid_conditions as $key => $value ) {
+			$optional_invalid_conditions[ sanitize_key( $key ) ] = array(
+				'response_text' => stripslashes( sanitize_textarea_field( $value['response_text'] ) ),
+				'checkbox'      => (bool) $value['checkbox'],
+			);
+		}
+
+		foreach ( $unsanitized_default_invalid_conditions as $key => $value ) {
+			$default_invalid_conditions[ sanitize_key( $key ) ] = array(
+				'response_text' => stripslashes( sanitize_textarea_field( $value['response_text'] ) ),
+			);
+
+		}
 
 		$meta = array_merge(
 			array(
@@ -101,6 +118,7 @@ class Admin {
 				'optional_invalid_conditions' => $optional_invalid_conditions,
 			)
 		);
+
 		if ( $service_id && $codereadr_service_id ) {
 			$request = wp_remote_get(
 				'https://api.codereadr.com/api/',
@@ -132,21 +150,30 @@ class Admin {
 			);
 		}
 		$response = wp_remote_retrieve_body( $request );
+
 		if ( $response ) {
+
 			$response = simplexml_load_string( $response );
 			$response = codereadr_xml2array( $response );
 			if ( $response['status'] ) {
+				if ( $response['status'] !== '0' ) {
+					if ( $service_id ) {
+						$res = Services_Model::update_service( $service_id, $title, $action_name, $integration_slug, $meta );
+					} else {
+						$res = Services_Model::add_new_service( $title, $response['id'], $action_name, $integration_slug, $meta );
+					}
+					if ( $res ) {
+						wp_send_json_success( array( 'message' => 'Inserted succesfully!' ) );
+					} else {
+						wp_send_json_error( array( 'message' => 'Error while inserting a new service' ) );
+					}
+				}
+			} else {
+				if ( $response['status'] === '0' ) {
+					wp_send_json_error( array( 'message' => $response['error'] ) );
+				}
 
-				if ( $service_id ) {
-					$res = Services_Model::update_service( $service_id, $title, $action_name, $integration_slug, $meta );
-				} else {
-					$res = Services_Model::add_new_service( $title, $response['id'], $action_name, $integration_slug, $meta );
-				}
-				if ( $res ) {
-					wp_send_json_success( array( 'message' => 'Inserted succesfully!' ) );
-				} else {
-					wp_send_json_error( array( 'message' => 'Error while inserting a new response' ) );
-				}
+				wp_send_json_error( array( 'message' => 'Error while creating the service!' ) );
 			}
 		}
 	}
@@ -381,11 +408,19 @@ class Admin {
 					if ( $response['status'] ) {
 						wp_send_json_success( array( 'message' => 'Created succesfully!' ) );
 					} else {
-						wp_send_json_error( array( 'response' => 'Error while creating user!' ) );
+						if ( $response['status'] === '0' ) {
+							wp_send_json_error( array( 'message' => $response['error'] ) );
+						} else {
+							wp_send_json_error( array( 'message' => 'Error while creating user!' ) );
+						}
 					}
 				}
 			} else {
-				wp_send_json_error( array( 'message' => 'Error while creating a new user' ) );
+				if ( $response['status'] === '0' ) {
+					wp_send_json_error( array( 'message' => $response['error'] ) );
+				} else {
+					wp_send_json_error( array( 'message' => 'Error while creating user!' ) );
+				}
 			}
 		}
 
