@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       CodeREADr
- * Plugin URI:        https://www.https://www.codereadr.com/
+ * Plugin URI:        https://www.codereadr.com/
  * Description:       Integrate CodeREADr with WordPress
  * Version:           1.0.0
  * Author:            codereadr.com
