@@ -24,7 +24,7 @@ if ( ! defined( 'CODEREADR_PLUGIN_FILE' ) ) {
 
 // Plugin version.
 if ( ! defined( 'CODEREADR_VERSION' ) ) {
-	define( 'CODEREADR_VERSION', '1.7.5' );
+	define( 'CODEREADR_VERSION', '1.0.0' );
 }
 
 // Plugin Folder Path.
