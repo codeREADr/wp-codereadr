@@ -32,10 +32,10 @@ class Install {
 	 */
 	public static function check_version() {
 
-		// if ( version_compare( get_option( 'codereadr_version' ), CODEREADR_VERSION, '<' ) ) {
-		self::install();
-		do_action( 'codereadr_updated' );
-		// }
+		if ( version_compare( get_option( 'codereadr_version' ), CODEREADR_VERSION, '<' ) ) {
+			self::install();
+			do_action( 'codereadr_updated' );
+		}
 	}
 
 	/**
