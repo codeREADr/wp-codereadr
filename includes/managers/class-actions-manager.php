@@ -11,7 +11,7 @@ namespace CodeReadr\Managers;
 use CodeReadr\Abstracts\Action;
 
 /**
- * Core class used for interacting with block types.
+ * Core class used for interacting with Action types.
  *
  * @since 1.0.0
  */
@@ -35,11 +35,11 @@ final class Actions_Manager {
 	private static $instance = null;
 
 	/**
-	 * Registers a block type.
+	 * Registers a an action type.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param Action $block Action instance.
+	 * @param Action $action Action instance.
 	 *
 	 * @return Action the registered action on success, or false on failure
 	 */
@@ -67,7 +67,7 @@ final class Actions_Manager {
 	}
 
 	/**
-	 * Unregisters a block type.
+	 * Unregisters an action.
 	 *
 	 * @since 1.0.0
 	 *
@@ -110,7 +110,7 @@ final class Actions_Manager {
 	}
 
 	/**
-	 * Retrieves all registered block types.
+	 * Retrieves all registered actions.
 	 *
 	 * @since 1.0.0
 	 *
@@ -121,7 +121,7 @@ final class Actions_Manager {
 	}
 
 	/**
-	 * Checks if a block type is registered.
+	 * Checks if an action is registered.
 	 *
 	 * @since 1.0.0
 	 *
