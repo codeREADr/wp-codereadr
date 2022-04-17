@@ -54,7 +54,7 @@ final class Actions_Manager {
 		}
 
 		if ( $this->is_registered( $action_name ) ) {
-			/* translators: %s: Block name. */
+			/* translators: %s: action name. */
 			$message = sprintf( __( 'Action "%s" is already registered.', 'codereadr' ), $action_name );
 			_doing_it_wrong( __METHOD__, $message, '1.0.0' );
 
@@ -125,9 +125,9 @@ final class Actions_Manager {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $name block type name including namespace.
+	 * @param string $name action type name including namespace.
 	 *
-	 * @return bool true if the block type is registered, false otherwise
+	 * @return bool true if the action type is registered, false otherwise
 	 */
 	public function is_registered( $name ) : bool {
 		return isset( $this->registered_actions[ $name ] );
