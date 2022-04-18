@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="WordPress Coding Standards for Quill Forms Plugin">
+<ruleset name="WordPress Coding Standards for CodeREADr Plugin">
 	<description>Sniffs for WordPress plugins, with minor modifications for CodeReadr</description>
 
 	<exclude-pattern>./vendor/*</exclude-pattern>
