@@ -98,7 +98,7 @@ class Admin {
 		foreach ( $unsanitized_optional_invalid_conditions as $key => $value ) {
 			$optional_invalid_conditions[ sanitize_key( $key ) ] = array(
 				'response_text' => stripslashes( sanitize_textarea_field( $value['response_text'] ) ),
-				'checkbox'      => (bool) $value['checkbox'],
+				'checkbox'      => boolval( $value['checkbox'] ),
 			);
 		}
 
