@@ -6,6 +6,9 @@
  * Version:           1.0.0
  * Author:            codereadr.com
  * Author URI:        http://www.codereadr.com
+ * Copyright:         CodeREADr Inc.
+ * License:           GPL v2 or later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       codereadr
  * Requires at least: 4.1
  * Requires PHP: 5.3
